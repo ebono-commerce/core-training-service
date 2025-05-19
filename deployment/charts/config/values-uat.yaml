@@ -1,0 +1,125 @@
+# Default values for catalyst_orders.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+environment:
+  name: uat
+
+replicaCount: 1
+version: v1
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+image:
+  repository: asia-docker.pkg.dev/ebono-platform-components/ebono/core-customer
+  tag: $IMAGE_TAG
+  pullPolicy: IfNotPresent
+  pullSecret:
+    enabled: true
+    registry: asia-docker.pkg.dev
+    username: username
+    password: password
+
+service:
+  type: ClusterIP
+  port: 80
+  canary:
+    name: beta
+    enabled: false
+
+containers:
+  port: 4444
+
+ingress:
+  enabled: false
+  annotations:
+    {}
+    # kubernetes.io/ingress.class: nginx
+  # kubernetes.io/tls-acme: "true"
+  uriPrefix: /customer/
+  hosts:
+    - services-uat.ebono.com
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+egress:
+  enabled: false
+  hosts:
+    - chart-example.local
+
+pod:
+  initialDelaySeconds: 15
+
+resources:
+  {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+#  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+podAntiAffinity:
+  enabled: true
+
+environmentVariables:
+  ENVIRONMENT: UAT
+  GCP_ZONE: "asia-south1"
+  SERVICE_BASE_URL: "https://services-uat.ebono.com"
+  CORE_NETWORK_SERVICE_URI: http://core-network.core-fulfillment.svc.cluster.local
+  CORE_WALLET_SERVICE_URI: http://ebono-wallet-service.core-commerce.svc.cluster.local
+  CORE_OMS_SERVICE_URI: http://core-order-service.core-fulfillment.svc.cluster.local
+  LOYALTY_PROCESS_QUEUE: loyalty-process-queue
+  CUSTOMER_CAMPAIGN_CREDIT_PROCESS_QUEUE: customer-campaign-credit-process-queue
+  OFFLINE_INVOICE_CUSTOMER_PROCESS_QUEUE: offline-invoice-customer-process-queue
+  CHURN_CAMPAIGN_PROCESS_QUEUE: churn-campaign-process-queue
+  CAMPAIGN_NOTIFICATION_PROCESS_QUEUE: campaign-notification-process-queue
+  CAMPAIGN_MEDIA_PROCESS_QUEUE: campaign-media-process-queue
+  CUSTOMER_ORDER_STATUS_NOTIFICATION_PROCESS_QUEUE: customer-order-status-notification-process-queue
+  WALLET_SECRET_NAME: WALLET_SECRET_SALT
+  NOTIFICATION_SERVICE_URI: "http://notification.notification.svc.cluster.local"
+  SIGN_UP_NOTIFICATION_EVENT_ID: "EBONO_OFFLINE_ACTIVATION_1"
+  UPLIFT_NOTIFICATION_EVENT_ID: "EBONO_OFFLINE_UPLIFT_1"
+  ENABLE_NOTIFICATION: false
+  ENABLE_CHURN_SIMULATION_MODE: false
+  CORE_ARTIFACT_SERVICE_URI: http://core-artifact-service.common.svc.cluster.local
+  CORE_ARTIFACT_CONFIG_ID: "6365daa4-cdf9-5cb4-b131-c4e5bd4e5cb7"
+  ENABLE_FCM_NOTIFICATION: false
+  EBONO_FCM_EVENT_ID: "EBONO_FCM_1"
+  SAME_FCM_RESTRICTION_COUNT_THRESHOLD: 5
+  FRAUD_CUSTOMER_SEGMENT_NAME: "DEVICE_MULTI_CUSTOMER_FRAUD"
+  LOG_LEVEL: info
+  CUSTOMER_QUEUE: customer-queue
+
+gcp:
+  enabled: false
+
+database:
+  enabled: true
+
+destinationPolicy:
+  maxConnections: 6000
+  http1MaxPendingRequests: 1024
+  maxRequestsPerConnection: 10
+  consecutiveErrors: 7
+  interval: 1s
+  baseEjectionTime: 5m
+  maxEjectionPercent: 10
+
+jwt_policy:
+  enabled: true
+  audience: https://services.ebono.com

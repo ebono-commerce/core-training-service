@@ -1,0 +1,59 @@
+{{- if .Values.jwt_policy.enabled -}}
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  annotations:
+    meta.helm.sh/release-name: {{ template "name" . }}
+  labels:
+    app: {{ .Chart.Name }}-{{ .Values.image.tag }}
+    app.kubernetes.io/managed-by: Helm
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ template "name" . }}
+  name: {{ template "name" . }}
+spec:
+  rules:
+  - to:
+    - operation:
+        paths:
+        - /metrics
+        - /health
+        - /documentation/*
+        - /documentation
+        - /v1/loyalty/trigger/loyalty-process
+        - /v1/loyalty/orders/loyalty-processor
+        - /v1/campaigns/credit-processor-task
+        - /v1/campaigns/offline-customer-processor-task
+        - /v1/events/orders
+        - /v1/events/invoices
+        - /v1/events/shipments
+        - /v1/events/tms
+        - /v1/campaigns/churn/config-task-creator-cron
+        - /v1/campaigns/churn/config-processor-task
+        - /v1/campaigns/churn/notification-processor-task
+        - /v1/campaigns/churn/re-notification-cron
+        - /v1/campaigns/churn/media-upload-processor-task
+        - /v1/customers/notification/shipment-status-updated
+        - /v1/customers/task-processor
+  - from:
+    - source:
+        principals:
+        - '*'
+    to:
+    - operation:
+        methods:
+        - POST
+        - GET
+        - DELETE
+        - PATCH
+        - PUT
+        paths:
+        - /v1/*
+    when:
+    - key: request.auth.claims[aud]
+      values:
+      - {{ .Values.jwt_policy.audience }}
+  selector:
+    matchLabels:
+      release: {{ template "name" . }}
+---
+{{- end -}}
