@@ -1,9 +1,10 @@
 const SWAGGER_CONFIGS = {
   routePrefix: "/documentation",
+  mode: "dynamic",
   openapi: {
     info: {
-      title: "IBO User Service",
-      description: "API Docs for the IBO User Service",
+      title: "KPN Core Customer",
+      description: "API Docs for the KPN Core Customer",
       version: "0.1.0"
     },
     externalDocs: {
@@ -12,23 +13,35 @@ const SWAGGER_CONFIGS = {
     },
     servers: [
       {
-        url: "https://services-dev.ibo.com/something",
-        description: "Development server"
-      },
-      {
-        url: "https://services-staging.ibo.com/something",
+        url: "https://services-staging.kpnfresh.com/customer",
         description: "Staging server"
       },
       {
-        url: "https://services.ibo.com/something",
+        url: "https://services.kpnfresh.com/customer",
         description: "Production server"
       }
     ],
-    schemes: ["https"],
-    produces: ["application/json"],
-    tags: [{ name: "IBO User API's" }]
+    tags: [{ name: "KPN Core Customer API's" }]
+  }
+};
+
+const SWAGGER_UI_CONFIGS = {
+  routePrefix: "/documentation",
+  initOAuth: {},
+  uiConfig: {
+    docExpansion: "list",
+    deepLinking: false
   },
-  exposeRoute: true
+  uiHooks: {
+    onRequest(request, reply, next) {
+      next();
+    },
+    preHandler(request, reply, next) {
+      next();
+    }
+  },
+  staticCSP: true,
+  transformStaticCSP: header => header
 };
 
 // eslint-disable-next-line complexity
@@ -54,6 +67,8 @@ function severity(label) {
 function level(label) {
   return { severity: severity(label) };
 }
+
+const DEFAULT_LIMIT_IN_MIB = 1048576;
 
 const SERVER_CONFIGS = {
   logger: {
@@ -95,19 +110,24 @@ const SERVER_CONFIGS = {
       }
     },
     level: process.env.LOG_LEVEL || "info",
-    prettyPrint:
-      process.env.NODE_ENV === "development"
-        ? {
-            colorize: true,
-            levelFirst: true
-          }
-        : false
+    ...(process.env.NODE_ENV === "development" && {
+      transport: {
+        target: "pino-pretty",
+        options: {
+          colorize: true,
+          levelFirst: true
+        }
+      }
+    })
   },
   disableRequestLogging: true,
-  keepAliveTimeout: 10000
+  exposeHeadRoutes: false,
+  keepAliveTimeout: 10000,
+  bodyLimit: DEFAULT_LIMIT_IN_MIB * 3
 };
 
 module.exports = {
   SWAGGER_CONFIGS,
-  SERVER_CONFIGS
+  SERVER_CONFIGS,
+  SWAGGER_UI_CONFIGS
 };
