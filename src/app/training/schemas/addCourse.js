@@ -21,7 +21,14 @@ const postAddCourse = {
       description: { type: "string" },
       course_category: {
         type: "string",
-        enum: ["PRODUCT", "SYSTEM", "SOFT_SKILLS", "PROCESS", "HR_INDUCTION", "CUSTOMER_EXCELLENCE"]
+        enum: [
+          "PRODUCT",
+          "SYSTEM",
+          "SOFT_SKILLS",
+          "PROCESS",
+          "HR_INDUCTION",
+          "CUSTOMER_EXCELLENCE"
+        ]
       },
       tags: {
         type: "array",

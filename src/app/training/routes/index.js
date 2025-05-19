@@ -92,5 +92,4 @@ module.exports = async fastify => {
     schema: schemas.postCourseAnalyticsFetch,
     handler: handlers.postCourseAnalyticsFetch(fastify)
   });
-  //DONT_REMOVE_ADD_NEW_ROUTE
 };

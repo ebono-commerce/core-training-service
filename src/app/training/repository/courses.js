@@ -20,7 +20,7 @@ function courseRepo(fastify) {
     });
 
     const response = await query;
-    return { course_id: response[0] };
+    return response[0];
   }
 
   async function putCourse({ data, logTrace, course_id }) {

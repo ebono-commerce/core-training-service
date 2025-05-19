@@ -13,7 +13,8 @@ function createTagsService(fastify) {
       data: { tag_id: randomUUID(), tag },
       logTrace
     });
-    return response; // User transformer in case transformation is needed
+
+    return response.tag_id; // User transformer in case transformation is needed
   };
 }
 module.exports = createTagsService;
