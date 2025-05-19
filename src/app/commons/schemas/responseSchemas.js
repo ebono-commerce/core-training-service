@@ -20,44 +20,4 @@ const auditSchema = {
   }
 };
 
-const customInfo = {
-  $id: "response-custom-info",
-  type: "array",
-  items: {
-    type: "object",
-    properties: {
-      group: { type: "string" },
-      id: { type: "string" },
-      values: { type: "array", items: { type: "string" } },
-      additional_info: { type: "object" }
-    }
-  }
-};
-
-const pagination = {
-  $id: "response-pagination",
-  type: "object",
-  properties: {
-    current_page: { type: "integer" },
-    page_size: { type: "integer" },
-    total_items: { type: "integer" },
-    total_pages: { type: "integer" }
-  }
-};
-
-const quantity = {
-  $id: "response-quantity",
-  type: "object",
-  properties: {
-    quantity_number: { type: "integer" },
-    quantity_uom: { type: "string" }
-  }
-};
-
-exports.commonResponseSchemas = [
-  amountSchema,
-  auditSchema,
-  customInfo,
-  pagination,
-  quantity
-];
+exports.commonResponseSchemas = [amountSchema, auditSchema];

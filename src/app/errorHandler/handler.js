@@ -3,8 +3,9 @@ const CustomError = require("./CustomError");
 const { DEFAULT_MAPPERS } = require("./mappers");
 const { getRequest, getError } = require("./helpers");
 
-module.exports = (options, mappers = DEFAULT_MAPPERS) =>
-  async function ErrorHandler(error, request, reply) {
+module.exports =
+  (mappers = DEFAULT_MAPPERS, options) =>
+  (error, request, reply) => {
     request.log.error({
       request: getRequest(request),
       error: getError(error),

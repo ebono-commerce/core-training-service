@@ -14,7 +14,7 @@ async function requestLogging(request) {
   }
 }
 
-async function responseLogging(request, reply) {
+async function responseLogging(request, reply, payload) {
   if (request.url === "/health" || request.url === "/metrics") {
     return;
   }
@@ -29,8 +29,9 @@ async function responseLogging(request, reply) {
       raw_headers: request.headers
     },
     response: {
+      data: payload,
       status_code: reply.statusCode,
-      response_time: reply.elapsedTime
+      response_time: reply.getResponseTime()
     }
   });
 }

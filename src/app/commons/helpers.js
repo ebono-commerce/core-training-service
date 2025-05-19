@@ -19,6 +19,21 @@ exports.getAuditInfo = entity => {
   };
 };
 
+exports.getAuditInfoForUpdate = ({ audit }) => {
+  const currentTimeStamp = new Date().toISOString();
+  const obj = {
+    updated_at: currentTimeStamp
+  };
+  if (!audit) {
+    return obj;
+  }
+  const { updated_by } = audit;
+  return {
+    ...(updated_by && { updated_by }),
+    ...obj
+  };
+};
+
 exports.logQuery = ({ logger, query, context, logTrace }) => {
   const SQLQueryObj = query.toSQL();
   logger.debug({

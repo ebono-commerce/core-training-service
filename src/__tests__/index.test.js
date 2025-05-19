@@ -2,11 +2,11 @@ const { create, start } = require("../index");
 
 jest.mock("fastify", () => () => ({
   setErrorHandler: jest.fn().mockReturnValue(true),
-  register: jest.fn().mockResolvedValue(true),
+  register: jest.fn().mockReturnValue(true),
   addHook: jest.fn().mockReturnValue(true),
   ready: jest.fn().mockReturnValue(true),
   close: jest.fn().mockReturnValue(true),
-  listen: jest.fn((_, callback) => callback(false, "00"))
+  listen: jest.fn((file, fileName, callback) => callback(false, "00"))
 }));
 
 jest.mock("knex", () => () => ({}));
@@ -20,7 +20,7 @@ let fastify;
 
 describe("create server", () => {
   beforeAll(async () => {
-    fastify = await create();
+    fastify = create();
     await fastify.ready();
   });
 

@@ -1,10 +1,9 @@
 const SWAGGER_CONFIGS = {
   routePrefix: "/documentation",
-  mode: "dynamic",
   openapi: {
     info: {
-      title: "KPN User Service",
-      description: "API Docs for the KPN User Service",
+      title: "IBO User Service",
+      description: "API Docs for the IBO User Service",
       version: "0.1.0"
     },
     externalDocs: {
@@ -13,35 +12,23 @@ const SWAGGER_CONFIGS = {
     },
     servers: [
       {
-        url: "https://services-staging.kpnfarmfresh.com/something",
+        url: "https://services-dev.ibo.com/something",
+        description: "Development server"
+      },
+      {
+        url: "https://services-staging.ibo.com/something",
         description: "Staging server"
       },
       {
-        url: "https://services.kpnfarmfresh.com/something",
+        url: "https://services.ibo.com/something",
         description: "Production server"
       }
     ],
-    tags: [{ name: "KPN User API's" }]
-  }
-};
-
-const SWAGGER_UI_CONFIGS = {
-  routePrefix: "/documentation",
-  initOAuth: {},
-  uiConfig: {
-    docExpansion: "list",
-    deepLinking: false
+    schemes: ["https"],
+    produces: ["application/json"],
+    tags: [{ name: "IBO User API's" }]
   },
-  uiHooks: {
-    onRequest(request, reply, next) {
-      next();
-    },
-    preHandler(request, reply, next) {
-      next();
-    }
-  },
-  staticCSP: true,
-  transformStaticCSP: header => header
+  exposeRoute: true
 };
 
 // eslint-disable-next-line complexity
@@ -108,23 +95,19 @@ const SERVER_CONFIGS = {
       }
     },
     level: process.env.LOG_LEVEL || "info",
-    ...(process.env.NODE_ENV === "development" && {
-      transport: {
-        target: "pino-pretty",
-        options: {
-          colorize: true,
-          levelFirst: true
-        }
-      }
-    })
+    prettyPrint:
+      process.env.NODE_ENV === "development"
+        ? {
+            colorize: true,
+            levelFirst: true
+          }
+        : false
   },
   disableRequestLogging: true,
-  exposeHeadRoutes: false,
   keepAliveTimeout: 10000
 };
 
 module.exports = {
   SWAGGER_CONFIGS,
-  SERVER_CONFIGS,
-  SWAGGER_UI_CONFIGS
+  SERVER_CONFIGS
 };
