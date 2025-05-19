@@ -82,22 +82,22 @@ spec:
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: core-training-db-secret
+                  name: core-training-db-secrets
                   key: DB_USER
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: core-training-db-secret
+                  name: core-training-db-secrets
                   key: DB_PASSWORD
             - name: DB_HOST
               valueFrom:
                 secretKeyRef:
-                  name: core-training-db-secret
+                  name: core-training-db-secrets
                   key: DB_HOST
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: core-training-db-secret
+                  name: core-training-db-secrets
                   key: DB_NAME
           {{- end }}
           {{- range $key, $value := .Values.environmentVariables }}
